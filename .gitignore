@@ -1,0 +1,22 @@
+# Java & Maven
+backend/target/
+backend/oracleJdk*/
+*.class
+*.jar
+*.war
+.mvn/wrapper/maven-wrapper.jar
+
+# Frontend & Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.iml
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
