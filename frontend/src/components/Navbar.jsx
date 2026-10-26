@@ -1,77 +1,131 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Heart, LayoutDashboard, History, LogIn, LogOut, UserPlus, ShieldAlert, Sparkles } from 'lucide-react';
 
-/**
- * MODULE 3.1 & 5.2: Semantic Navbar Component
- * 
- * Demonstrates:
- * 1. Semantic HTML5 tags (<header>, <nav>, <ul>, <li>).
- * 2. Props: Receives 'currentUser' and 'onLogout' from parent App.jsx.
- * 3. Conditional Rendering: Renders admin/donor links and login/logout dynamically.
- */
-function Navbar({ currentUser, onLogout }) {
+export default function Navbar() {
+  const { user, logout, isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    onLogout();
-    navigate('/login');
+    logout();
+    navigate('/');
   };
 
   return (
-    <header>
-      <nav className="navbar">
-        {/* Brand Link */}
-        <Link to="/" className="navbar-brand">
-          <span>🤝</span> Donation Management
+    <nav style={{
+      position: 'sticky',
+      top: '16px',
+      margin: '0 auto 28px',
+      maxWidth: '1540px',
+      width: 'calc(100% - 32px)',
+      padding: '12px 24px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: '16px',
+      zIndex: 50,
+      background: '#FCFAF6',
+      borderRadius: 'var(--radius-full)',
+      border: '1px solid rgba(24, 40, 29, 0.1)',
+      boxShadow: '0 4px 20px rgba(24, 40, 29, 0.06)'
+    }}>
+      {/* Brand Logo - Distinctive Mark Inspired by Image */}
+      <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+        <div style={{
+          width: '38px',
+          height: '38px',
+          borderRadius: '50%',
+          background: 'var(--primary)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(30, 53, 36, 0.25)'
+        }}>
+          <Heart size={18} color="#D8B775" fill="#D8B775" />
+        </div>
+        <div>
+          <span style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.4rem',
+            fontWeight: 800,
+            color: 'var(--primary)',
+            letterSpacing: '-0.03em',
+            display: 'block',
+            lineHeight: '1.1'
+          }}>
+            KindFund
+          </span>
+          <span style={{
+            display: 'block',
+            fontSize: '0.62rem',
+            fontWeight: 700,
+            color: 'var(--text-muted)',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase'
+          }}>
+            Donation Platform
+          </span>
+        </div>
+      </Link>
+
+      {/* Navigation Links */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <Link to="/" className="filter-chip" style={{ textDecoration: 'none' }}>
+          Explore Causes
         </Link>
 
-        {/* Navigation Links */}
-        <ul className="nav-links">
-          <li>
-            <Link to="/">Campaigns</Link>
-          </li>
+        {isAuthenticated && !isAdmin && (
+          <Link to="/donor" className="filter-chip" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <History size={14} />
+            My Giving Portal
+          </Link>
+        )}
 
-          {/* Conditional links based on whether user is logged in */}
-          {currentUser ? (
-            <>
-              {currentUser.role === 'ADMIN' && (
-                <li>
-                  <Link to="/admin">Admin Dashboard</Link>
-                </li>
-              )}
+        {isAuthenticated && isAdmin && (
+          <Link to="/admin" className="filter-chip" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <LayoutDashboard size={14} />
+            Admin Console
+          </Link>
+        )}
+      </div>
 
-              {currentUser.role === 'DONOR' && (
-                <li>
-                  <Link to="/donor">My Donations</Link>
-                </li>
-              )}
-
-              <li>
-                <span className="user-badge">
-                  {currentUser.name} ({currentUser.role})
-                </span>
-              </li>
-
-              <li>
-                <button onClick={handleLogout} className="btn btn-secondary btn-sm">
-                  Logout
-                </button>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-              <li>
-                <Link to="/register">Register</Link>
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
-    </header>
+      {/* User Actions */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {isAuthenticated ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-full)',
+              background: 'var(--pill-bg)',
+              border: '1px solid var(--pill-border)'
+            }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>{user.name}</span>
+              <span className={`badge ${isAdmin ? 'badge-completed' : 'badge-active'}`}>
+                {user.role}
+              </span>
+            </div>
+            <button onClick={handleLogout} className="btn btn-danger btn-sm" title="Log out">
+              <LogOut size={14} />
+              Exit
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Link to="/login" className="btn btn-secondary btn-sm">
+              <LogIn size={15} />
+              Sign In
+            </Link>
+            <Link to="/register" className="btn btn-primary btn-sm">
+              <UserPlus size={15} />
+              Join
+            </Link>
+          </div>
+        )}
+      </div>
+    </nav>
   );
 }
-
-export default Navbar;

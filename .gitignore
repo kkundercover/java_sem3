@@ -1,6 +1,7 @@
 # Java & Maven
+target/
 backend/target/
-backend/oracleJdk*/
+oracleJdk*/
 *.class
 *.jar
 *.war
@@ -8,8 +9,11 @@ backend/oracleJdk*/
 
 # Frontend & Node
 frontend/node_modules/
+node_modules/
 frontend/dist/
+dist/
 frontend/.vite/
+.vite/
 
 # IDE & Editor files
 .idea/
